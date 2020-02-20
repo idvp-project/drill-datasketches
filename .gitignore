@@ -1,0 +1,14 @@
+########### total ###########
+
+.java-version
+
+# idea
+.idea
+*.iml
+
+# maven
+target
+.project
+.classpath
+.settings
+dependency-reduced-pom.xml
