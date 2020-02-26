@@ -13,4 +13,4 @@ Currently only supports https://datasketches.apache.org/docs/Theta/ThetaSketchFr
 |theta_decode_count([VarBinary column with theta sketch])|-|Estimated count distinct|
 
 ### NOTE:
-On Java 11+ it may be necessary to add value `--add-module=jdk.unsupported` to `DRILL_JAVA_OPTS`
+On Java 11+ it may be necessary to add value `--add-modules jdk.unsupported` to `DRILL_JAVA_OPTS`
