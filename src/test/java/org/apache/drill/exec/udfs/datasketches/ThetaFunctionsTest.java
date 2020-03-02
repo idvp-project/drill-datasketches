@@ -33,6 +33,22 @@ public class ThetaFunctionsTest extends ClusterTest {
   }
 
   @Test
+  public void testThetaCount2() throws Exception {
+    final String query = "select theta_count(`col_int`, 10) as col_int, " +
+            "theta_count(`col_dt`, 10) as col_dt, " +
+            "theta_count(`col_tmstmp`, 10) as col_tmstmp, " +
+            "theta_count(`col_vrchr`, 10) as col_vrchr, " +
+            "theta_count(`col_tim`, 10) as col_tim, " +
+            "theta_count(`col_flt`, 10) as col_flt, " +
+            "theta_count(`col_chr`, 10) as col_chr " +
+            "from cp.`parquet/alltypes_required.parquet`";
+    testBuilder().sqlQuery(query).ordered()
+            .baselineColumns("col_int", "col_dt", "col_tmstmp", "col_vrchr", "col_tim", "col_flt", "col_chr")
+            .baselineValues(4L, 4L, 4L, 4L, 4L, 4L, 4L)
+            .go();
+  }
+
+  @Test
   public void testTheta_decodeCount() throws Exception {
     final String query = "select theta_decode_count(theta(`col_int`)) as col_int, " +
       "theta_decode_count(theta(`col_dt`)) as col_dt, " +
@@ -46,6 +62,22 @@ public class ThetaFunctionsTest extends ClusterTest {
       .baselineColumns("col_int", "col_dt", "col_tmstmp", "col_vrchr", "col_tim", "col_flt", "col_chr")
       .baselineValues(4L, 4L, 4L, 4L, 4L, 4L, 4L)
       .go();
+  }
+
+  @Test
+  public void testTheta_decodeCount2() throws Exception {
+    final String query = "select theta_decode_count(theta(`col_int`, 10)) as col_int, " +
+            "theta_decode_count(theta(`col_dt`, 10)) as col_dt, " +
+            "theta_decode_count(theta(`col_tmstmp`, 10)) as col_tmstmp, " +
+            "theta_decode_count(theta(`col_vrchr`, 10)) as col_vrchr, " +
+            "theta_decode_count(theta(`col_tim`, 10)) as col_tim, " +
+            "theta_decode_count(theta(`col_flt`, 10)) as col_flt, " +
+            "theta_decode_count(theta(`col_chr`, 10)) as col_chr " +
+            "from cp.`parquet/alltypes_required.parquet`";
+    testBuilder().sqlQuery(query).ordered()
+            .baselineColumns("col_int", "col_dt", "col_tmstmp", "col_vrchr", "col_tim", "col_flt", "col_chr")
+            .baselineValues(4L, 4L, 4L, 4L, 4L, 4L, 4L)
+            .go();
   }
 
   @Test
@@ -65,6 +97,22 @@ public class ThetaFunctionsTest extends ClusterTest {
   }
 
   @Test
+  public void testTheta_decode2() throws Exception {
+    final String query = "select theta_decode(theta(`col_int`, 10)) as col_int, " +
+            "theta_decode(theta(`col_dt`, 10)) as col_dt, " +
+            "theta_decode(theta(`col_tmstmp`, 10)) as col_tmstmp, " +
+            "theta_decode(theta(`col_vrchr`, 10)) as col_vrchr, " +
+            "theta_decode(theta(`col_tim`, 10)) as col_tim, " +
+            "theta_decode(theta(`col_flt`, 10)) as col_flt, " +
+            "theta_decode(theta(`col_chr`, 10)) as col_chr " +
+            "from cp.`parquet/alltypes_required.parquet`";
+    testBuilder().sqlQuery(query).ordered()
+            .baselineColumns("col_int", "col_dt", "col_tmstmp", "col_vrchr", "col_tim", "col_flt", "col_chr")
+            .baselineValues(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)
+            .go();
+  }
+
+  @Test
   public void testThetaCount_nullable() throws Exception {
     final String query = "select theta_count(`col_int`) as col_int, " +
       "theta_count(`col_dt`) as col_dt, " +
@@ -78,6 +126,22 @@ public class ThetaFunctionsTest extends ClusterTest {
       .baselineColumns("col_int", "col_dt", "col_tmstmp", "col_vrchr", "col_tim", "col_flt", "col_chr")
       .baselineValues(2L, 3L, 3L, 3L, 3L, 3L, 3L)
       .go();
+  }
+
+  @Test
+  public void testThetaCount_nullable2() throws Exception {
+    final String query = "select theta_count(`col_int`, 10) as col_int, " +
+            "theta_count(`col_dt`, 10) as col_dt, " +
+            "theta_count(`col_tmstmp`, 10) as col_tmstmp, " +
+            "theta_count(`col_vrchr`, 10) as col_vrchr, " +
+            "theta_count(`col_tim`, 10) as col_tim, " +
+            "theta_count(`col_flt`, 10) as col_flt, " +
+            "theta_count(`col_chr`, 10) as col_chr " +
+            "from cp.`parquet/alltypes_optional.parquet`";
+    testBuilder().sqlQuery(query).ordered()
+            .baselineColumns("col_int", "col_dt", "col_tmstmp", "col_vrchr", "col_tim", "col_flt", "col_chr")
+            .baselineValues(2L, 3L, 3L, 3L, 3L, 3L, 3L)
+            .go();
   }
 
   @Test
@@ -97,6 +161,22 @@ public class ThetaFunctionsTest extends ClusterTest {
   }
 
   @Test
+  public void testTheta_decodeCount_nullable2() throws Exception {
+    final String query = "select theta_decode_count(theta(`col_int`, 10)) as col_int, " +
+            "theta_decode_count(theta(`col_dt`, 10)) as col_dt, " +
+            "theta_decode_count(theta(`col_tmstmp`, 10)) as col_tmstmp, " +
+            "theta_decode_count(theta(`col_vrchr`, 10)) as col_vrchr, " +
+            "theta_decode_count(theta(`col_tim`, 10)) as col_tim, " +
+            "theta_decode_count(theta(`col_flt`, 10)) as col_flt, " +
+            "theta_decode_count(theta(`col_chr`, 10)) as col_chr " +
+            "from cp.`parquet/alltypes_optional.parquet`";
+    testBuilder().sqlQuery(query).ordered()
+            .baselineColumns("col_int", "col_dt", "col_tmstmp", "col_vrchr", "col_tim", "col_flt", "col_chr")
+            .baselineValues(2L, 3L, 3L, 3L, 3L, 3L, 3L)
+            .go();
+  }
+
+  @Test
   public void testTheta_decode_nullable() throws Exception {
     final String query = "select theta_decode(theta(`col_int`)) as col_int, " +
       "theta_decode(theta(`col_dt`)) as col_dt, " +
@@ -113,6 +193,22 @@ public class ThetaFunctionsTest extends ClusterTest {
   }
 
   @Test
+  public void testTheta_decode_nullable2() throws Exception {
+    final String query = "select theta_decode(theta(`col_int`, 10)) as col_int, " +
+            "theta_decode(theta(`col_dt`, 10)) as col_dt, " +
+            "theta_decode(theta(`col_tmstmp`, 10)) as col_tmstmp, " +
+            "theta_decode(theta(`col_vrchr`, 10)) as col_vrchr, " +
+            "theta_decode(theta(`col_tim`, 10)) as col_tim, " +
+            "theta_decode(theta(`col_flt`, 10)) as col_flt, " +
+            "theta_decode(theta(`col_chr`, 10)) as col_chr " +
+            "from cp.`parquet/alltypes_optional.parquet`";
+    testBuilder().sqlQuery(query).ordered()
+            .baselineColumns("col_int", "col_dt", "col_tmstmp", "col_vrchr", "col_tim", "col_flt", "col_chr")
+            .baselineValues(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)
+            .go();
+  }
+
+  @Test
   public void testTheta_union_decode() throws Exception {
     final String query = "select theta_decode_count(theta_union(s.col_int)) as col_int from (" +
       "  select theta(`col_int`) as col_int from cp.`parquet/alltypes_required.parquet`" +
@@ -123,6 +219,20 @@ public class ThetaFunctionsTest extends ClusterTest {
       .baselineColumns("col_int")
       .baselineValues(4L)
       .go();
+  }
+
+
+  @Test
+  public void testTheta_union_decode2() throws Exception {
+    final String query = "select theta_decode_count(theta_union(s.col_int, 10)) as col_int from (" +
+            "  select theta(`col_int`, 10) as col_int from cp.`parquet/alltypes_required.parquet`" +
+            "  union all" +
+            "  select theta(`col_int`, 10) as col_int from cp.`parquet/alltypes_optional.parquet`" +
+            ") s";
+    testBuilder().sqlQuery(query).ordered()
+            .baselineColumns("col_int")
+            .baselineValues(4L)
+            .go();
   }
 
   @Test
@@ -136,5 +246,18 @@ public class ThetaFunctionsTest extends ClusterTest {
       .baselineColumns("col_int")
       .baselineValues(2L)
       .go();
+  }
+
+  @Test
+  public void testTheta_intersect_decode2() throws Exception {
+    final String query = "select theta_decode_count(theta_intersection(s.col_int, 10)) as col_int from (" +
+            "  select theta(`col_int`, 10) as col_int from cp.`parquet/alltypes_required.parquet`" +
+            "  union all" +
+            "  select theta(`col_int`, 10) as col_int from cp.`parquet/alltypes_optional.parquet`" +
+            ") s";
+    testBuilder().sqlQuery(query).ordered()
+            .baselineColumns("col_int")
+            .baselineValues(2L)
+            .go();
   }
 }
