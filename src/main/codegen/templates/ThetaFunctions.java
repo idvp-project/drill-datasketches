@@ -56,20 +56,16 @@ public class ThetaFunctions {
   @FunctionTemplate(name = "${func.funcName}", scope = FunctionTemplate.FunctionScope.POINT_AGGREGATE)
   public static class ${type.inputType}${func.className} implements DrillAggFunc {
     @Param ${type.inputType}Holder in;
-    @Inject DrillBuf workBuf;
     @Inject DrillBuf outputBuf;
     @Output VarBinaryHolder out;
     @Workspace ObjectHolder sketchHolder;
 
     @Override
     public void setup() {
-      workBuf = workBuf.reallocIfNeeded(org.apache.datasketches.theta.Sketch.getMaxUpdateSketchBytes(org.apache.datasketches.Util.DEFAULT_NOMINAL_ENTRIES));
-      org.apache.datasketches.memory.DrillWritableMemory memory = org.apache.datasketches.memory.DrillWritableMemory.wrap(workBuf);
       org.apache.datasketches.theta.UpdateSketch sketch = org.apache.datasketches.theta.UpdateSketch.builder()
-        .setMemoryRequestServer(memory.getMemoryRequestServer())
         .setFamily(org.apache.datasketches.Family.QUICKSELECT)
         .setNominalEntries(org.apache.datasketches.Util.DEFAULT_NOMINAL_ENTRIES)
-        .build(memory);
+        .build();
       sketchHolder = new ObjectHolder();
       sketchHolder.obj = sketch;
     }
@@ -130,7 +126,6 @@ public class ThetaFunctions {
   public static class ${type.inputType}${func.className}2 implements DrillAggFunc {
     @Param ${type.inputType}Holder in;
     @Param IntHolder log2mHolder;
-    @Inject DrillBuf workBuf;
     @Inject DrillBuf outputBuf;
     @Output NullableVarBinaryHolder out;
     @Workspace ObjectHolder sketchHolder;
@@ -149,13 +144,10 @@ public class ThetaFunctions {
         originalLog2mHolder.value = log2m;
         log2m = Math.min(log2m, org.apache.datasketches.Util.MAX_LG_NOM_LONGS);
         log2m = Math.max(log2m, org.apache.datasketches.Util.MIN_LG_NOM_LONGS);
-        workBuf = workBuf.reallocIfNeeded(org.apache.datasketches.theta.Sketch.getMaxUpdateSketchBytes(1 << log2m));
-        org.apache.datasketches.memory.DrillWritableMemory memory = org.apache.datasketches.memory.DrillWritableMemory.wrap(workBuf);
         org.apache.datasketches.theta.UpdateSketch sketch = org.apache.datasketches.theta.UpdateSketch.builder()
-                .setMemoryRequestServer(memory.getMemoryRequestServer())
                 .setFamily(org.apache.datasketches.Family.QUICKSELECT)
                 .setNominalEntries(1 << log2m)
-                .build(memory);
+                .build();
         sketchHolder.obj = sketch;
       } else if (originalLog2mHolder.value != log2mHolder.value) {
         throw new IllegalArgumentException("Log2m value must be a constant");
@@ -221,19 +213,15 @@ public class ThetaFunctions {
   @FunctionTemplate(name = "${func.funcName}_count", scope = FunctionTemplate.FunctionScope.POINT_AGGREGATE)
   public static class ${type.inputType}${func.className}Count implements DrillAggFunc {
     @Param ${type.inputType}Holder in;
-    @Inject DrillBuf workBuf;
     @Output BigIntHolder out;
     @Workspace ObjectHolder sketchHolder;
 
     @Override
     public void setup() {
-      workBuf = workBuf.reallocIfNeeded(org.apache.datasketches.theta.Sketch.getMaxUpdateSketchBytes(org.apache.datasketches.Util.DEFAULT_NOMINAL_ENTRIES));
-      org.apache.datasketches.memory.DrillWritableMemory memory = org.apache.datasketches.memory.DrillWritableMemory.wrap(workBuf);
       org.apache.datasketches.theta.UpdateSketch sketch = org.apache.datasketches.theta.UpdateSketch.builder()
-        .setMemoryRequestServer(memory.getMemoryRequestServer())
         .setFamily(org.apache.datasketches.Family.QUICKSELECT)
         .setNominalEntries(org.apache.datasketches.Util.DEFAULT_NOMINAL_ENTRIES)
-        .build(memory);
+        .build();
       sketchHolder = new ObjectHolder();
       sketchHolder.obj = sketch;
     }
@@ -287,7 +275,6 @@ public class ThetaFunctions {
   public static class ${type.inputType}${func.className}Count2 implements DrillAggFunc {
     @Param ${type.inputType}Holder in;
     @Param IntHolder log2mHolder;
-    @Inject DrillBuf workBuf;
     @Output NullableBigIntHolder out;
     @Workspace ObjectHolder sketchHolder;
     @Workspace IntHolder originalLog2mHolder;
@@ -305,13 +292,10 @@ public class ThetaFunctions {
         originalLog2mHolder.value = log2m;
         log2m = Math.min(log2m, org.apache.datasketches.Util.MAX_LG_NOM_LONGS);
         log2m = Math.max(log2m, org.apache.datasketches.Util.MIN_LG_NOM_LONGS);
-        workBuf = workBuf.reallocIfNeeded(org.apache.datasketches.theta.Sketch.getMaxUpdateSketchBytes(1 << log2m));
-        org.apache.datasketches.memory.DrillWritableMemory memory = org.apache.datasketches.memory.DrillWritableMemory.wrap(workBuf);
         org.apache.datasketches.theta.UpdateSketch sketch = org.apache.datasketches.theta.UpdateSketch.builder()
-                .setMemoryRequestServer(memory.getMemoryRequestServer())
                 .setFamily(org.apache.datasketches.Family.QUICKSELECT)
                 .setNominalEntries(1 << log2m)
-                .build(memory);
+                .build();
         sketchHolder.obj = sketch;
       } else if (originalLog2mHolder.value != log2mHolder.value) {
         throw new IllegalArgumentException("Log2m value must be a constant");
@@ -373,19 +357,15 @@ public class ThetaFunctions {
   @FunctionTemplate(name = "${func.funcName}_${mergeFunc}", scope = FunctionTemplate.FunctionScope.POINT_AGGREGATE)
   public static class ${type}${func.className}${mergeFunc} implements DrillAggFunc {
     @Param ${type}Holder in;
-    @Inject DrillBuf workBuf;
     @Inject DrillBuf outputBuf;
     @Output VarBinaryHolder out;
     @Workspace ObjectHolder operationHolder;
 
     @Override
     public void setup() {
-      workBuf = workBuf.reallocIfNeeded(org.apache.datasketches.theta.Sketch.getMaxUpdateSketchBytes(org.apache.datasketches.Util.DEFAULT_NOMINAL_ENTRIES));
-      org.apache.datasketches.memory.DrillWritableMemory memory = org.apache.datasketches.memory.DrillWritableMemory.wrap(workBuf);
       org.apache.datasketches.theta.${mergeFunc?capitalize} setOperation = org.apache.datasketches.theta.SetOperation.builder()
-        .setMemoryRequestServer(memory.getMemoryRequestServer())
         .setNominalEntries(org.apache.datasketches.Util.DEFAULT_NOMINAL_ENTRIES)
-        .build${mergeFunc?capitalize}(memory);
+        .build${mergeFunc?capitalize}();
       operationHolder = new ObjectHolder();
       operationHolder.obj = setOperation;
     }
@@ -435,7 +415,6 @@ public class ThetaFunctions {
   public static class ${type}${func.className}${mergeFunc}2 implements DrillAggFunc {
     @Param ${type}Holder in;
     @Param IntHolder log2mHolder;
-    @Inject DrillBuf workBuf;
     @Inject DrillBuf outputBuf;
     @Output NullableVarBinaryHolder out;
     @Workspace ObjectHolder operationHolder;
@@ -454,12 +433,9 @@ public class ThetaFunctions {
         originalLog2mHolder.value = log2m;
         log2m = Math.min(log2m, org.apache.datasketches.Util.MAX_LG_NOM_LONGS);
         log2m = Math.max(log2m, org.apache.datasketches.Util.MIN_LG_NOM_LONGS);
-        workBuf = workBuf.reallocIfNeeded(org.apache.datasketches.theta.Sketch.getMaxUpdateSketchBytes(1 << log2m));
-        org.apache.datasketches.memory.DrillWritableMemory memory = org.apache.datasketches.memory.DrillWritableMemory.wrap(workBuf);
         org.apache.datasketches.theta.${mergeFunc?capitalize} setOperation = org.apache.datasketches.theta.SetOperation.builder()
-                .setMemoryRequestServer(memory.getMemoryRequestServer())
                 .setNominalEntries(1 << log2m)
-                .build${mergeFunc?capitalize}(memory);
+                .build${mergeFunc?capitalize}();
         operationHolder.obj = setOperation;
       } else if (originalLog2mHolder.value != log2mHolder.value) {
         throw new IllegalArgumentException("Log2m value must be a constant");
